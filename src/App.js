@@ -6,19 +6,11 @@ import './App.css';
 
 localStorage.removeItem('users')
 localStorage.removeItem('habits')
-localStorage.removeItem('history')
-
 if (localStorage.users === undefined) {
     localStorage.users = JSON.stringify({
       1: {
         "name": "Caroline",
-        "email": "carchemin@gmail.com",
         "currentStrike": 2
-      },
-      2: {
-        "name": "Romain",
-        "email": "romain@soufflet.io",
-        "currentStrike": 24
       }
     });
 }
@@ -26,14 +18,17 @@ if (localStorage.habits === undefined) {
     localStorage.habits = JSON.stringify({
       1: {
         "name": "Yoga",
+        "habit_id": 1,
         "icon": "yoga.svg#yoga"
       },
       2: {
         "name": "Read",
+        "habit_id": 2,
         "icon": "bootstrap-icons.svg#book"
       },
       3: {
         "name": "Plants care",
+        "habit_id": 3,
         "icon": "bootstrap-icons.svg#flower2"
       }
     });
@@ -85,7 +80,7 @@ class App extends Component {
   localStorageUpdated() {
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
     const today = new Date();
-    const history = JSON.parse(localStorage.history)
+    const history = localStorage.history !== undefined ? JSON.parse(localStorage.history) : []
 
     let days = {
       1: {

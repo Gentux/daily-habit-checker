@@ -25,7 +25,7 @@ class CheckHabitButton extends Component {
 
     for (const habit_id in habits) {
       this.state.habits.push(
-        <button type="button" className="btn btn-secondary" key={habits[habit_id].name} onClick={this.checkHabit.bind(this, habit_id)}>
+        <button type="button" className="btn btn-secondary" key={habit_id} onClick={this.checkHabit.bind(this, habit_id)}>
           <SvgIcon icon={habits[habit_id].icon} name={habits[habit_id].name}/>
         </button>
       );
@@ -42,6 +42,13 @@ class CheckHabitButton extends Component {
     );
     localStorage.history = JSON.stringify(history)
 
+    let new_habits = [];
+    for (const habit in this.state.habits) {
+      if (this.state.habits[habit].key !== habit_id) {
+        new_habits.push(this.state.habits[habit]);
+      }
+    }
+    this.setState({habits: new_habits});
     this.state.updateFct()
   }
 
@@ -64,8 +71,7 @@ class CheckHabitButton extends Component {
                 {this.state.habits}
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" className="btn btn-primary">Save changes</button>
+                <button type="button" className="btn btn-primary" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
