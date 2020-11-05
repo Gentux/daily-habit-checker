@@ -4,7 +4,8 @@ import Day from './components/Day.js';
 import Stat from './components/Stat.js';
 import './App.css';
 
-import { uuidv4, initLocalStorage, dateToString } from 'utils/utils.js'
+import initLocalStorage from 'utils/data.js'
+import { uuidv4, dateToString } from 'utils/utils.js'
 
 initLocalStorage();
 

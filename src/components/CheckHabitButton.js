@@ -80,7 +80,7 @@ class CheckHabitButton extends Component {
                 </button>
               </div>
               <div className="modal-body">
-                {this.state.habits}
+                {this.state.habits.length > 0 ? this.state.habits : "All sets, GG !"}
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-primary" data-dismiss="modal">Close</button>
