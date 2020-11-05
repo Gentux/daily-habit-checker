@@ -1,11 +1,11 @@
-function uuidv4() {
+export function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     let r = Math.random() * 16 | 0
     return r.toString(16);
   });
 }
 
-function initLocalStorage() {
+export function initLocalStorage() {
   localStorage.removeItem('users')
   localStorage.removeItem('habits')
   localStorage.removeItem('history')
@@ -86,14 +86,14 @@ function initLocalStorage() {
   }
 }
 
-function dateToString(date) {
+export function dateToString(date) {
   let year = date.getFullYear();
   let month = date.getMonth();
   let day = date.getDate();
   return year.toString() + (month < 10 ? '0' + month.toString() : month.toString()) + (day < 10 ? '0' + day.toString() : day.toString());
 }
 
-function stringToDate(dateString) {
+export function stringToDate(dateString) {
   return new Date(
     parseInt(dateString.substr(0,4)),
     parseInt(dateString.substr(4,2)),
@@ -101,9 +101,5 @@ function stringToDate(dateString) {
   )
 }
 
-export default {
-  uuid: uuidv4,
-  initLocalStorage: initLocalStorage,
-  dateToString: dateToString,
-  stringToDate: stringToDate
-};
+const default_export = "this is default";
+export default default_export;

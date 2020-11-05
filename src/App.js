@@ -4,9 +4,9 @@ import Day from './components/Day.js';
 import Stat from './components/Stat.js';
 import './App.css';
 
-import utils from 'utils/utils.js'
+import { uuidv4, initLocalStorage, dateToString } from 'utils/utils.js'
 
-utils.initLocalStorage();
+initLocalStorage();
 
 const weekday = {
   0: "Sunday",
@@ -34,7 +34,7 @@ class App extends Component {
     let days = {}
     for (let i = 0; i < 5; i++) {
       const date = new Date(today - oneDay * i);
-      const localStorageKey = "history-" + utils.dateToString(date);
+      const localStorageKey = "history-" + dateToString(date);
       const history = localStorage.getItem(localStorageKey) !== undefined ? JSON.parse(localStorage.getItem(localStorageKey)) : []
 
       let dayOfTheWeek = weekday[date.getDay()]
@@ -45,7 +45,7 @@ class App extends Component {
 
       days[i] = {
         "day": dayOfTheWeek,
-        "id": utils.uuid(),
+        "id": uuidv4(),
         "icons": []
       }
 

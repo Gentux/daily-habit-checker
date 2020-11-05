@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import SvgIcon from './SvgIcon.js'
-import utils from 'utils/utils.js'
+import { uuidv4, dateToString } from 'utils/utils.js'
 
 class CheckHabitButton extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ class CheckHabitButton extends Component {
   }
 
   updateHabit() {
-    const localStorageKey = "history-" + utils.dateToString(new Date());
+    const localStorageKey = "history-" + dateToString(new Date());
     const history = localStorage.getItem(localStorageKey) !== null ? JSON.parse(localStorage.getItem(localStorageKey)) : []
 
     let habits = {}
@@ -31,7 +31,7 @@ class CheckHabitButton extends Component {
     for (const habit_id in habits) {
       if (today_checked.includes(parseInt(habit_id)) === false) {
         new_habits.push(
-          <button type="button" className="btn btn-secondary" key={habit_id + " - " + utils.uuid()} onClick={this.checkHabit.bind(this, habit_id)}>
+          <button type="button" className="btn btn-secondary" key={habit_id + " - " + uuidv4()} onClick={this.checkHabit.bind(this, habit_id)}>
             <SvgIcon icon={habits[habit_id].icon} name={habits[habit_id].name}/>
           </button>
         );
@@ -42,11 +42,11 @@ class CheckHabitButton extends Component {
   }
 
   checkHabit(habit_id) {
-    const localStorageKey = "history-" + utils.dateToString(new Date());
+    const localStorageKey = "history-" + dateToString(new Date());
     const history = localStorage.getItem(localStorageKey) !== null ? JSON.parse(localStorage.getItem(localStorageKey)) : []
 
     history.push(
-      { "id": utils.uuid(), "user_id": 1, "habit_id": parseInt(habit_id) }
+      { "id": uuidv4(), "user_id": 1, "habit_id": parseInt(habit_id) }
     );
     localStorage.setItem(localStorageKey, JSON.stringify(history))
 

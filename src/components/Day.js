@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import SvgIcon from 'components/SvgIcon.js'
-import utils from 'utils/utils.js'
+import { uuidv4, dateToString } from 'utils/utils.js'
 
 class Day extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class Day extends Component {
 
     if (this.state.day === "Today") {
       this.state.icons = props.icons.map((icon) =>
-        <button className={"btn btn-" + this.state.color} key={icon.habit_id + " - " + utils.uuid()} onClick={this.removeIcon.bind(this, icon)} >
+        <button className={"btn btn-" + this.state.color} key={icon.habit_id + " - " + uuidv4()} onClick={this.removeIcon.bind(this, icon)} >
           <SvgIcon icon={icon.icon} name={icon.name} />
         </button>
       );
@@ -38,7 +38,7 @@ class Day extends Component {
   }
 
   removeIcon(icon_clicked) {
-    const localStorageKey = "history-" + utils.dateToString(new Date());
+    const localStorageKey = "history-" + dateToString(new Date());
     const history = localStorage.getItem(localStorageKey) !== null ? JSON.parse(localStorage.getItem(localStorageKey)) : []
 
     // Remove graphically your icon
