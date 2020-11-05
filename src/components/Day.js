@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-import SvgIcon from './SvgIcon.js'
+import SvgIcon from 'components/SvgIcon.js'
+import utils from 'utils/utils.js'
 
 class Day extends Component {
   constructor(props) {
@@ -23,7 +24,7 @@ class Day extends Component {
 
     if (this.state.day === "Today") {
       this.state.icons = props.icons.map((icon) =>
-        <button className={"btn btn-" + this.state.color} key={icon.icon} onClick={this.removeIcon.bind(this, icon)} >
+        <button className={"btn btn-" + this.state.color} key={icon.habit_id + " - " + utils.uuid()} onClick={this.removeIcon.bind(this, icon)} >
           <SvgIcon icon={icon.icon} name={icon.name} />
         </button>
       );
@@ -37,28 +38,25 @@ class Day extends Component {
   }
 
   removeIcon(icon_clicked) {
+    const localStorageKey = "history-" + utils.dateToString(new Date());
+    const history = localStorage.getItem(localStorageKey) !== null ? JSON.parse(localStorage.getItem(localStorageKey)) : []
+
     // Remove graphically your icon
     let new_icons = [];
     for (const icon_index in this.state.icons) {
-      if ( this.state.icons[icon_index].key !== icon_clicked.icon ) {
+      if (parseInt(this.state.icons[icon_index].key.split(" ")[0]) !== icon_clicked.habit_id) {
         new_icons.push(this.state.icons[icon_index]);
       }
     }
 
     // Remove from localStorage your icon
     let new_history = []
-    let old_history = JSON.parse(localStorage.history)
-    for (const history_id in old_history) {
-      let raw_date = new Date(old_history[history_id].date);
-      let short_date = "" + raw_date.getFullYear() + raw_date.getMonth() + raw_date.getDate();
-      let today = new Date();
-      let today_short_date = "" + today.getFullYear() + today.getMonth() + today.getDate();
-
-      if (old_history[history_id].habit_id !== icon_clicked.habit_id || short_date !== today_short_date) {
-        new_history.push(old_history[history_id])
+    for (const history_id in history) {
+      if (history[history_id].habit_id !== icon_clicked.habit_id) {
+        new_history.push(history[history_id])
       }
     }
-    localStorage.history = JSON.stringify(new_history)
+    localStorage.setItem(localStorageKey, JSON.stringify(new_history))
 
     const habitsCount = Object.keys(JSON.parse(localStorage.habits)).length;
     this.setState({

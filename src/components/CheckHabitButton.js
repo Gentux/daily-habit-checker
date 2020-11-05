@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 
 import SvgIcon from './SvgIcon.js'
-
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    let r = Math.random() * 16 | 0
-    return r.toString(16);
-  });
-}
+import utils from 'utils/utils.js'
 
 class CheckHabitButton extends Component {
   constructor(props) {
@@ -17,34 +11,48 @@ class CheckHabitButton extends Component {
       habits: [],
       updateFct: props.updateFct
     }
+  }
+
+  updateHabit() {
+    const localStorageKey = "history-" + utils.dateToString(new Date());
+    const history = localStorage.getItem(localStorageKey) !== null ? JSON.parse(localStorage.getItem(localStorageKey)) : []
 
     let habits = {}
-    if (localStorage.habits !== undefined) {
+    if (localStorage.habits !== null) {
       habits = JSON.parse(localStorage.habits)
     }
 
-    for (const habit_id in habits) {
-      this.state.habits.push(
-        <button type="button" className="btn btn-secondary" key={habit_id} onClick={this.checkHabit.bind(this, habit_id)}>
-          <SvgIcon icon={habits[habit_id].icon} name={habits[habit_id].name}/>
-        </button>
-      );
+    let today_checked = [];
+    for (const history_id in history) {
+      today_checked.push(history[history_id].habit_id)
     }
+
+    let new_habits = []
+    for (const habit_id in habits) {
+      if (today_checked.includes(parseInt(habit_id)) === false) {
+        new_habits.push(
+          <button type="button" className="btn btn-secondary" key={habit_id + " - " + utils.uuid()} onClick={this.checkHabit.bind(this, habit_id)}>
+            <SvgIcon icon={habits[habit_id].icon} name={habits[habit_id].name}/>
+          </button>
+        );
+      }
+    }
+
+    this.setState({habits: new_habits});
   }
 
   checkHabit(habit_id) {
-    if (localStorage.history === undefined)
-      return null;
+    const localStorageKey = "history-" + utils.dateToString(new Date());
+    const history = localStorage.getItem(localStorageKey) !== null ? JSON.parse(localStorage.getItem(localStorageKey)) : []
 
-    let history = JSON.parse(localStorage.history)
     history.push(
-      { "id": uuidv4(), "date": new Date(), "user_id": 1, "habit_id": parseInt(habit_id) }
+      { "id": utils.uuid(), "user_id": 1, "habit_id": parseInt(habit_id) }
     );
-    localStorage.history = JSON.stringify(history)
+    localStorage.setItem(localStorageKey, JSON.stringify(history))
 
     let new_habits = [];
     for (const habit in this.state.habits) {
-      if (this.state.habits[habit].key !== habit_id) {
+      if (this.state.habits[habit].key.split(" ")[0] !== habit_id) {
         new_habits.push(this.state.habits[habit]);
       }
     }
@@ -52,10 +60,14 @@ class CheckHabitButton extends Component {
     this.state.updateFct()
   }
 
+  componentDidMount() {
+    this.updateHabit();
+  }
+
   render() {
     return(
       <div>
-        <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#checkModal">
+        <button type="button" className="btn btn-primary" onClick={this.updateHabit.bind(this)} data-toggle="modal" data-target="#checkModal">
           Check
         </button>
         <div className="modal fade" id="checkModal" tabIndex="-1" role="dialog" aria-labelledby="checkModalLabel" aria-hidden="true">

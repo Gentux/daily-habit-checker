@@ -4,59 +4,9 @@ import Day from './components/Day.js';
 import Stat from './components/Stat.js';
 import './App.css';
 
-localStorage.removeItem('users')
-localStorage.removeItem('habits')
-if (localStorage.users === undefined) {
-    localStorage.users = JSON.stringify({
-      1: {
-        "name": "Caroline",
-        "currentStrike": 2
-      }
-    });
-}
-if (localStorage.habits === undefined) {
-    localStorage.habits = JSON.stringify({
-      1: {
-        "name": "Yoga",
-        "habit_id": 1,
-        "icon": "yoga.svg#yoga"
-      },
-      2: {
-        "name": "Read",
-        "habit_id": 2,
-        "icon": "bootstrap-icons.svg#book"
-      },
-      3: {
-        "name": "Plants care",
-        "habit_id": 3,
-        "icon": "bootstrap-icons.svg#flower2"
-      }
-    });
-}
-if (localStorage.history === undefined) {
-    localStorage.history = JSON.stringify([
-      { "id": uuidv4(), "date": new Date(2020, 9, 29), "user_id": 1, "habit_id": 1 },
-      { "id": uuidv4(), "date": new Date(2020, 9, 29), "user_id": 1, "habit_id": 3 },
-      { "id": uuidv4(), "date": new Date(2020, 9, 30), "user_id": 1, "habit_id": 1 },
-      { "id": uuidv4(), "date": new Date(2020, 9, 31), "user_id": 1, "habit_id": 1 },
-      { "id": uuidv4(), "date": new Date(2020, 9, 31), "user_id": 1, "habit_id": 2 },
-      { "id": uuidv4(), "date": new Date(2020, 9, 31), "user_id": 1, "habit_id": 3 },
-      { "id": uuidv4(), "date": new Date(2020, 10, 1), "user_id": 1, "habit_id": 1 },
-      { "id": uuidv4(), "date": new Date(2020, 10, 1), "user_id": 1, "habit_id": 2 },
-      { "id": uuidv4(), "date": new Date(2020, 10, 1), "user_id": 1, "habit_id": 3 },
-      { "id": uuidv4(), "date": new Date(2020, 10, 2), "user_id": 1, "habit_id": 1 },
-      { "id": uuidv4(), "date": new Date(2020, 10, 2), "user_id": 1, "habit_id": 2 },
-      { "id": uuidv4(), "date": new Date(2020, 10, 2), "user_id": 1, "habit_id": 3 },
-      { "id": uuidv4(), "date": new Date(2020, 10, 3), "user_id": 1, "habit_id": 2 }
-    ]);
-}
+import utils from 'utils/utils.js'
 
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    let r = Math.random() * 16 | 0
-    return r.toString(16);
-  });
-}
+utils.initLocalStorage();
 
 const weekday = {
   0: "Sunday",
@@ -77,50 +27,37 @@ class App extends Component {
     };
   }
 
-  localStorageUpdated() {
+  updateState() {
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
     const today = new Date();
-    const history = localStorage.history !== undefined ? JSON.parse(localStorage.history) : []
 
-    let days = {
-      1: {
-        "day": "Today",
-        "id": uuidv4(),
-        "icons": []
-      }
-    }
+    let days = {}
+    for (let i = 0; i < 5; i++) {
+      const date = new Date(today - oneDay * i);
+      const localStorageKey = "history-" + utils.dateToString(date);
+      const history = localStorage.getItem(localStorageKey) !== undefined ? JSON.parse(localStorage.getItem(localStorageKey)) : []
 
-    for (const history_id in history) {
-      let raw_date = new Date(history[history_id].date)
-      let element_date = new Date(raw_date.getFullYear(), raw_date.getMonth(), raw_date.getDate())
-
-      let diffDays = Math.round(Math.abs((today - element_date) / oneDay));
-      if ( diffDays > 5 )
-        continue
-
-      let dayOfTheWeek = weekday[element_date.getDay()]
-      if ( diffDays === 1 )
+      let dayOfTheWeek = weekday[date.getDay()]
+      if ( i === 0 )
         dayOfTheWeek = "Today"
-      if ( diffDays === 2 )
+      if ( i === 1 )
         dayOfTheWeek = "Yesterday"
 
-      let icon = JSON.parse(localStorage.habits)[history[history_id].habit_id]
-      if (days[diffDays] === undefined) {
-        days[diffDays] = {
-          "day": dayOfTheWeek,
-          "id": uuidv4(),
-          "icons": []
-        }
+      days[i] = {
+        "day": dayOfTheWeek,
+        "id": utils.uuid(),
+        "icons": []
       }
 
-      days[diffDays].icons.push(icon)
+      for (const history_id in history) {
+        days[i].icons.push(JSON.parse(localStorage.habits)[history[history_id].habit_id])
+      }
     }
-
     this.setState({days: days})
   }
 
   componentDidMount() {
-    this.localStorageUpdated();
+    this.updateState();
   }
 
   render() {
@@ -135,7 +72,7 @@ class App extends Component {
       <div className="content">
         { days }
 
-        <Stat updateFct={this.localStorageUpdated.bind(this)} />
+        <Stat updateFct={this.updateState.bind(this)} />
       </div>
     );
   }

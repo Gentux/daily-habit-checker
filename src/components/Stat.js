@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import CheckHabitButton from './CheckHabitButton.js'
+import CheckHabitButton from 'components/CheckHabitButton.js'
 
 class Stat extends Component {
   constructor(props) {
