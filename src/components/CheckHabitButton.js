@@ -67,7 +67,7 @@ class CheckHabitButton extends Component {
   render() {
     return(
       <div>
-        <button type="button" className="btn btn-primary" onClick={this.updateHabit.bind(this)} data-toggle="modal" data-target="#checkModal">
+        <button type="button" className="btn btn-primary btn-lg btn-block" onClick={this.updateHabit.bind(this)} data-toggle="modal" data-target="#checkModal">
           Check
         </button>
         <div className="modal fade" id="checkModal" tabIndex="-1" role="dialog" aria-labelledby="checkModalLabel" aria-hidden="true">

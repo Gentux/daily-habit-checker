@@ -76,11 +76,9 @@ class Day extends Component {
     return(
       <div className={this.state.classes}>
         <div className="card-body">
-          <h5 className="card-title">{this.state.day}</h5>
+          <h5 className="card-title">{this.state.day} <span className="float-right">{this.state.completion} %</span></h5>
           <p className="card-text">
             {this.state.icons}
-
-            <span className="float-right">{this.state.completion} %</span>
           </p>
         </div>
       </div>

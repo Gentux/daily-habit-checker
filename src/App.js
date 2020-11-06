@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 
 import Day from './components/Day.js';
-import Stat from './components/Stat.js';
+import Header from './components/Header.js';
+import CheckHabitButton from './components/CheckHabitButton.js';
 import './App.css';
 
 import initLocalStorage from 'utils/data.js'
@@ -71,9 +72,11 @@ class App extends Component {
 
     return (
       <div className="content">
+        <Header />
+
         { days }
 
-        <Stat updateFct={this.updateState.bind(this)} />
+        <CheckHabitButton updateFct={this.updateState.bind(this)} />
       </div>
     );
   }
