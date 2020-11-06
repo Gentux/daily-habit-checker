@@ -47,6 +47,7 @@ class Day extends Component {
   removeIcon(icon_clicked) {
     const localStorageKey = "history-" + dateToString(new Date());
     const history = localStorage.getItem(localStorageKey) !== null ? JSON.parse(localStorage.getItem(localStorageKey)) : []
+    const habits = JSON.parse(localStorage.habits);
 
     // Remove graphically your icon
     let new_icons = [];
@@ -58,17 +59,18 @@ class Day extends Component {
 
     // Remove from localStorage your icon
     let new_history = []
+    let new_habits = []
     for (const history_id in history) {
       if (history[history_id].habit_id !== icon_clicked.habit_id) {
         new_history.push(history[history_id])
+        new_habits.push(habits[history[history_id].habit_id])
       }
     }
     localStorage.setItem(localStorageKey, JSON.stringify(new_history))
 
-    const habitsCount = Object.keys(JSON.parse(localStorage.habits)).length;
     this.setState({
       icons: new_icons,
-      completion: Math.trunc((this.state.icons.length - 1) * 100 / habitsCount)
+      completion: getCompletion(new_habits)
     })
   }
 
