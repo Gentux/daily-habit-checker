@@ -2,25 +2,32 @@ import React, { Component } from 'react';
 
 import SvgIcon from 'components/SvgIcon.js'
 import { uuidv4, dateToString } from 'utils/utils.js'
+import { getCompletion } from 'utils/data.js'
 
 class Day extends Component {
   constructor(props) {
     super(props);
 
-    const habitsCount = Object.keys(JSON.parse(localStorage.habits)).length;
-
     this.state = {
-      completion: Math.trunc(props.icons.length * 100 / habitsCount),
+      completion: getCompletion(props.icons),
       color: "danger", // red, very bad
       day: props.day
     }
 
+    /* Default color is red (no data, no icon checked)
+     *  0 - 40%   => red,    'danger' class
+     *  40 - 70%  => yellow, 'warning' class
+     *  70 - 100% => green,  'success' class
+     * possible class:
+     *  gray (secondary)
+     */
+
     if (props.day === "Today")
       this.state.color = "primary";
-    else if (this.state.completion === 100)
+    else if (this.state.completion >= 70)
       this.state.color = "success"; // Green, all good
-    else if (this.state.completion >= 50)
-      this.state.color = "secondary"; // Gray, not good
+    else if (this.state.completion >= 40)
+      this.state.color = "warning"; // Gray, not good
 
     if (this.state.day === "Today") {
       this.state.icons = props.icons.map((icon) =>
