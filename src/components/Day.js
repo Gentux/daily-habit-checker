@@ -75,10 +75,16 @@ class Day extends Component {
   }
 
   render() {
+    let medalOfCompletion = ""
+    if (this.state.completion >= 85) {
+      medalOfCompletion = <SvgIcon icon="bootstrap-icons.svg#star-fill" name="medalOfCompletion" />
+    }
     return(
       <div className={this.state.classes}>
         <div className="card-body">
-          <h5 className="card-title">{this.state.day} <span className="float-right">{this.state.completion} %</span></h5>
+          <h5 className="card-title">{this.state.day} <span className="float-right" style={{color: medalOfCompletion === "" ? "white" : "#ffd700" }}>
+            {medalOfCompletion} {this.state.completion} %</span>
+          </h5>
           <p className="card-text">
             {this.state.icons}
           </p>
