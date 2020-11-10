@@ -82,7 +82,7 @@ class Day extends Component {
     return(
       <div className={this.state.classes}>
         <div className="card-body">
-          <h5 className="card-title">{this.state.day} <span className="float-right" style={{color: medalOfCompletion === "" ? "white" : "#ffd700" }}>
+          <h5 className="card-title">{this.state.day} <span className="float-right">
             {medalOfCompletion} {this.state.completion} %</span>
           </h5>
           <p className="card-text">
