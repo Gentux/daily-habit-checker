@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import SvgIcon from './SvgIcon.js'
-import { uuidv4, dateToString } from 'utils/utils.js'
+import { uuidv4, dateToString, stringToDate } from 'utils/utils.js'
 
 class CheckHabitButton extends Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class CheckHabitButton extends Component {
 
     let new_habits = []
     for (const habit_id in habits) {
-      if (today_checked.includes(parseInt(habit_id)) === false) {
+      if (today_checked.includes(parseInt(habit_id)) === false && habits[habit_id].not_after === undefined) {
         new_habits.push(
           <button type="button" className="btn btn-secondary" key={habit_id + " - " + uuidv4()} onClick={this.checkHabit.bind(this, habit_id)}>
             <SvgIcon icon={habits[habit_id].icon} name={habits[habit_id].name}/>

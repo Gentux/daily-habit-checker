@@ -32,7 +32,8 @@ function getHabits() {
     4: {
       "name": "Draw",
       "habit_id": 4,
-      "icon": "drawing.svg#drawing"
+      "icon": "drawing.svg#drawing",
+      "not_after": dateToString(new Date(2020, 12, 1))
     },
     5: {
       "name": "walk outside",
@@ -56,12 +57,13 @@ function getHabits() {
       "name": "Vitamin",
       "habit_id": 8,
       "countable": true,
-      "icon": "vitamin.svg#vitamin"
+      "icon": "vitamin.svg#vitamin",
+      "not_after": dateToString(new Date(2020, 12, 1))
     },
     9: {
       "name": "Instagram",
       "habit_id": 9,
-      "countable": true,
+      "countable": false,
       "icon": "instagram.svg#instagram"
     }
   };
@@ -94,10 +96,16 @@ function storeTestHistory() {
 
 export function getCompletion(icons) {
   const habits = getHabits();
-  const habitsCount = Object.keys(habits).filter((habit_id) => habits[habit_id].countable).length;
+  const habitsCount = Object.keys(habits).filter((habit_id) => {
+    return habits[habit_id].countable && habits[habit_id].not_after === undefined
+  }).length;
   const iconsCount = Object.keys(icons.filter((icon ) => icon.countable)).length;
 
-  return iconsCount * 100 / habitsCount;
+  if (iconsCount >= habitsCount) {
+    return habitsCount * 100 / habitsCount
+  } else {
+    return iconsCount * 100 / habitsCount;
+  }
 }
 
 export default function initLocalStorage() {

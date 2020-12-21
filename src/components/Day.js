@@ -83,7 +83,7 @@ class Day extends Component {
       <div className={this.state.classes}>
         <div className="card-body">
           <h5 className="card-title">{this.state.day} <span className="float-right">
-            {medalOfCompletion} {this.state.completion} %</span>
+            {medalOfCompletion} {this.state.completion.toFixed(2)} %</span>
           </h5>
           <p className="card-text">
             {this.state.icons}
