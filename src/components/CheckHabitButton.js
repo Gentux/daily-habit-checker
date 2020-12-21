@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import SvgIcon from './SvgIcon.js'
-import { uuidv4, dateToString, stringToDate } from 'utils/utils.js'
+import { uuidv4, dateToString } from 'utils/utils.js'
 
 class CheckHabitButton extends Component {
   constructor(props) {
