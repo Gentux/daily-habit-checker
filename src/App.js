@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 
+import CheckHabitButton from './components/CheckHabitButton.js';
 import Day from './components/Day.js';
 import Header from './components/Header.js';
-import CheckHabitButton from './components/CheckHabitButton.js';
+import Settings from './components/Settings.js';
+import Tomorrow from './components/Tomorrow.js';
 import './App.css';
 
 import initLocalStorage from 'utils/data.js'
@@ -25,17 +27,19 @@ class App extends Component {
     super(props);
 
     this.state = {
-      days: {}
+      days: {},
+      route: "dailychecker",
     };
   }
 
   updateState() {
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const threeHour = 3 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
     const today = new Date();
 
     let days = {}
     for (let i = 0; i < 5; i++) {
-      const date = new Date(today - oneDay * i);
+      const date = new Date(today - threeHour - oneDay * i);
       const localStorageKey = "history-" + dateToString(date);
       const history = localStorage.getItem(localStorageKey) !== undefined ? JSON.parse(localStorage.getItem(localStorageKey)) : []
 
@@ -46,6 +50,7 @@ class App extends Component {
         dayOfTheWeek = "Yesterday"
 
       days[i] = {
+        "date": date,
         "day": dayOfTheWeek,
         "id": uuidv4(),
         "icons": []
@@ -62,21 +67,36 @@ class App extends Component {
     this.updateState();
   }
 
+  togglePage(route, e) {
+    if (route === undefined) {
+      this.setState({route: "dailychecker"})
+    } else {
+      this.setState({route: route})
+    }
+  }
+
   render() {
     let days = [];
     for (const day in this.state.days) {
       days.unshift(
-        <Day key={this.state.days[day].id} day={this.state.days[day].day} icons={this.state.days[day].icons} />
+        <Day key={this.state.days[day].id} date={this.state.days[day].date} day={this.state.days[day].day} icons={this.state.days[day].icons} />
       )
     }
 
     return (
       <div className="content">
-        <Header />
+        <Header route={this.state.route} routeFct={this.togglePage.bind(this)}/>
 
-        { days }
-
-        <CheckHabitButton updateFct={this.updateState.bind(this)} />
+        <div key="dailychecker" id="dailychecker" style={{display: this.state.route === "dailychecker" ? "inherit" : "none"}}>
+          { days }
+          <CheckHabitButton updateFct={this.updateState.bind(this)} />
+        </div>
+        <div key="tomorrow" id="tomorrow" style={{display: this.state.route === "tomorrow" ? "inherit" : "none"}}>
+          <Tomorrow />
+        </div>
+        <div key="settings" id="settings" style={{display: this.state.route === "settings" ? "inherit" : "none"}}>
+          <Settings />
+        </div>
       </div>
     );
   }
