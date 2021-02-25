@@ -14,7 +14,10 @@ class CheckHabitButton extends Component {
   }
 
   updateHabit() {
-    const localStorageKey = "history-" + dateToString(new Date());
+    const threeHour = 3 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const today = new Date();
+
+    const localStorageKey = "history-" + dateToString(new Date(today - threeHour));
     const history = localStorage.getItem(localStorageKey) !== null ? JSON.parse(localStorage.getItem(localStorageKey)) : []
 
     let habits = {}
@@ -42,7 +45,10 @@ class CheckHabitButton extends Component {
   }
 
   checkHabit(habit_id) {
-    const localStorageKey = "history-" + dateToString(new Date());
+    const threeHour = 3 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const today = new Date();
+
+    const localStorageKey = "history-" + dateToString(new Date(today - threeHour));
     const history = localStorage.getItem(localStorageKey) !== null ? JSON.parse(localStorage.getItem(localStorageKey)) : []
 
     history.push(

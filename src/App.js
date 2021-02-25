@@ -34,11 +34,12 @@ class App extends Component {
 
   updateState() {
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const threeHour = 3 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
     const today = new Date();
 
     let days = {}
     for (let i = 0; i < 5; i++) {
-      const date = new Date(today - oneDay * i);
+      const date = new Date(today - threeHour - oneDay * i);
       const localStorageKey = "history-" + dateToString(date);
       const history = localStorage.getItem(localStorageKey) !== undefined ? JSON.parse(localStorage.getItem(localStorageKey)) : []
 
