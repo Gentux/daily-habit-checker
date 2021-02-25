@@ -9,7 +9,7 @@ class Day extends Component {
     super(props);
 
     this.state = {
-      completion: getCompletion(props.icons),
+      completion: getCompletion(props.icons, props.date),
       color: "danger", // red, very bad
       day: props.day
     }

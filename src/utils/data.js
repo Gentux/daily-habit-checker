@@ -1,4 +1,4 @@
-import { dateToString, uuidv4 } from 'utils/utils.js'
+import { dateToString, stringToDate, uuidv4 } from 'utils/utils.js'
 
 function getTestUser() {
   return {
@@ -74,7 +74,18 @@ function storeTestHistory() {
   const today = new Date();
   const habits = getHabits();
 
-  for (let i = 1; i < 10; i++) {
+
+  let history = [];
+  for (const habit_id in habits) {
+    history.push({
+      "id": uuidv4(),
+      "user_id": 1,
+      "habit_id": habit_id
+    })
+  }
+  localStorage.setItem("history-" + dateToString(new Date(today - oneDay)), JSON.stringify(history))
+
+  for (let i = 2; i < 10; i++) {
     const date = new Date(today - oneDay * i);
     const localStorageKey = "history-" + dateToString(date);
 
@@ -94,10 +105,18 @@ function storeTestHistory() {
   }
 }
 
-export function getCompletion(icons) {
+export function getCompletion(icons, day) {
   const habits = getHabits();
   const habitsCount = Object.keys(habits).filter((habit_id) => {
-    return habits[habit_id].countable && habits[habit_id].not_after === undefined
+    if (day && habits[habit_id].not_after && day > stringToDate(habits[habit_id].not_after)) {
+      return false;
+    }
+
+    if (day && habits[habit_id].not_before && day < stringToDate(habits[habit_id].not_before)) {
+      return false
+    }
+
+    return habits[habit_id].countable
   }).length;
   const iconsCount = Object.keys(icons.filter((icon ) => icon.countable)).length;
 

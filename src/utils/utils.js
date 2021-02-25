@@ -13,6 +13,9 @@ export function dateToString(date) {
 }
 
 export function stringToDate(dateString) {
+  if (dateString === null || dateString === undefined) {
+    return null
+  }
   return new Date(
     parseInt(dateString.substr(0,4)),
     parseInt(dateString.substr(4,2)),
